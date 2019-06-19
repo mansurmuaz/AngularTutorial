@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { PersonsService } from './persons.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-persons',
@@ -6,6 +8,31 @@ import { Component, Input } from '@angular/core';
     styleUrls: ['./persons.component.css']
 })
 
-export class PersonsComponent {
-  @Input() personList: string[];
+export class PersonsComponent implements OnInit, OnDestroy {
+  personList: string[];
+  // private personService: PersonsService;
+
+  private personsSubscription: Subscription;
+
+  constructor(private personService: PersonsService) {
+    // this.personList = prsService.persons;
+    // this.personService = prsService;
+  }
+
+  ngOnInit() {
+    this.personList = this.personService.persons;
+    this.personsSubscription = this.personService.personsChanged.subscribe(persons => {
+      this.personList = persons;
+    });
+  }
+
+  onRemovePerson(personName: string) {
+    console.log(personName + ' clicked.');
+    this.personService.removePerson(personName);
+
+  }
+
+  ngOnDestroy() {
+    this.personsSubscription.unsubscribe();
+  }
 }
