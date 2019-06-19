@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 export class PersonsComponent implements OnInit, OnDestroy {
   personList: string[];
   // private personService: PersonsService;
-  isFetching: false;
+  isFetching = false;
 
   private personsSubscription: Subscription;
 
